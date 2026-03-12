@@ -7,7 +7,6 @@ export function useHomeData() {
   return useQuery({
     queryKey: ["home-data-v2"],
     queryFn: async () => {
-      console.log("Fetching fresh home data...");
 
       const [pets, vets, shops, owners, eventsResponse] = await Promise.all([
         supabase.from("pets").select("*", { count: "exact", head: true }),
@@ -23,7 +22,6 @@ export function useHomeData() {
           .from("register")
           .select("*", { count: "exact", head: true })
           .eq("role", "USER"),
-
         supabase
           .from("events")
           .select("*")
@@ -32,12 +30,6 @@ export function useHomeData() {
           .limit(3),
       ]);
 
-      // if (eventsResponse.error) {
-
-      // } else {
-
-      // }
-
       return {
         stats: {
           pets: pets.count || 0,
@@ -45,10 +37,9 @@ export function useHomeData() {
           shops: shops.count || 0,
           owners: owners.count || 0,
         },
-        events: eventsResponse.data || [],
+        events: (eventsResponse.data as any[]) || [], 
       };
     },
-
     staleTime: 0,
   });
 }

@@ -11,25 +11,25 @@ export default function Footer() {
             <span className="text-2xl font-black text-white tracking-tighter">POSHIK</span>
           </Link>
           <p className="text-sm leading-relaxed">
-            Leading the revolution in pet social networking and care services[cite: 4, 10].
+            Leading the revolution in pet social networking and care services.
           </p>
         </div>
 
         <div className="space-y-4">
           <h4 className="text-white font-bold text-xs uppercase tracking-widest">Ecosystem</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/map" className="hover:text-orange-500 transition-colors">Pet Discovery [cite: 54]</Link></li>
-            <li><Link href="/shop" className="hover:text-orange-500 transition-colors">Marketplace [cite: 67]</Link></li>
-            <li><Link href="/vets" className="hover:text-orange-500 transition-colors">Vet Booking [cite: 80]</Link></li>
+            <li><Link href="/map" className="hover:text-orange-500 transition-colors">Pet Discovery</Link></li>
+            <li><Link href="/marketplace" className="hover:text-orange-500 transition-colors">Marketplace</Link></li>
+            <li><Link href="/vets" className="hover:text-orange-500 transition-colors">Vet Booking </Link></li>
           </ul>
         </div>
 
         <div className="space-y-4">
           <h4 className="text-white font-bold text-xs uppercase tracking-widest">Compliance</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/privacy" className="hover:text-orange-500 transition-colors">GDPR Privacy [cite: 133]</Link></li>
-            <li><Link href="/kyc" className="hover:text-orange-500 transition-colors">Verification Terms [cite: 7]</Link></li>
-            <li><Link href="/audit" className="hover:text-orange-500 transition-colors">Audit Logs [cite: 134]</Link></li>
+            <li><Link href="/" className="hover:text-orange-500 transition-colors">GDPR Privacy</Link></li>
+            <li><Link href="/" className="hover:text-orange-500 transition-colors">Verification Terms </Link></li>
+            <li><Link href="/" className="hover:text-orange-500 transition-colors">Audit Logs</Link></li>
           </ul>
         </div>
 
@@ -39,12 +39,12 @@ export default function Footer() {
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             System Online
           </div>
-          <p className="text-[10px] leading-tight">Admin-monitored 24/7 for pet safety[cite: 98].</p>
+          <p className="text-[10px] leading-tight">Admin-monitored 24/7 for pet safety.</p>
         </div>
       </div>
       
       <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-slate-900 text-center text-[10px] uppercase tracking-[0.2em]">
-        © 2026 Poshik Platform. Built with Next.js & TypeScript[cite: 21].
+        © 2026 Poshik Platform. Built with Next.js & TypeScript.
       </div>
     </footer>
   );

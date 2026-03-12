@@ -39,12 +39,12 @@ export default function SignupPage() {
 
   const router = useRouter(); 
   
-  // We extract 'register' but we will handle the routing manually
+
   const { register, error, setUser } = useAuthStore();
   const [localError, setLocalError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  // --- HYDRATION GUARD ---
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -65,7 +65,7 @@ export default function SignupPage() {
     setIsPending(true);
     
     try {
-      // 1. Execute Registration via Store
+    
       await register({
         email: values.email,
         password: values.password,
@@ -76,13 +76,12 @@ export default function SignupPage() {
 
       const isProfessional = values.role === "DOCTOR" || values.role === "SHOP";
 
-      // 2. IMPERATIVE ROUTING: No useEffects, direct action
+    
       if (isProfessional) {
-        // DOCTOR & SHOP: Route directly to KYC.
-        // We use window.location.href to bypass any Next.js caching or AuthProvider listener race conditions
+       
         window.location.href = "/kyc-onboarding";
       } else {
-        // OWNER: Sign out to clear session, then go to Login with notification
+       
         await supabase.auth.signOut();
         setUser(null, null);
         const msg = encodeURIComponent("Registration successful! Please log in to access your portal.");
@@ -95,7 +94,7 @@ export default function SignupPage() {
     }
   };
 
-  // Hydration Guard: Return null until client is ready
+  
   if (!mounted) return null;
 
   return (

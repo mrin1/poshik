@@ -32,13 +32,12 @@ export default function Sidebar() {
     setMounted(true);
   }, []);
 
-  // Hydration Guard: Consistent server/client skeleton
   if (!mounted) return <aside className="w-80 bg-slate-50 border-r border-slate-200 hidden lg:flex h-screen" />;
 
   return (
     <aside className="w-80 bg-white border-r border-slate-200 hidden lg:flex flex-col h-[calc(100vh-5rem)] sticky top-20 overflow-hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
       
-      {/* SECTION: NAVIGATION */}
+
       <nav className="flex-1 px-4 py-8 space-y-1 overflow-y-auto no-scrollbar">
         <div className="flex items-center px-4 mb-8">
            <div className="h-1 w-8 bg-blue-600 rounded-full mr-3" />
@@ -72,7 +71,6 @@ export default function Sidebar() {
           );
         })}
 
-        {/* PROMO CARD: STATUS */}
         <div className="mx-2 mt-12 p-5 rounded-[2rem] bg-gradient-to-br from-blue-600 to-blue-700 text-white relative overflow-hidden shadow-xl shadow-blue-100">
             <Heart className="absolute -right-2 -bottom-2 h-16 w-16 text-white/10 rotate-12" />
             <div className="relative z-10">
@@ -87,9 +85,8 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* SECTION: USER & FOOTER */}
       <div className="p-4 bg-slate-50/50 border-t border-slate-100 space-y-2">
-        {/* Doctor Identity Profile Snippet */}
+  
         <div className="flex items-center p-3 mb-2 bg-white rounded-2xl border border-slate-100 shadow-sm">
            <div className="h-8 w-8 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 font-black text-[10px] uppercase">
              {user?.full_name?.charAt(0) || "D"}
@@ -100,11 +97,11 @@ export default function Sidebar() {
            </div>
         </div>
 
-        <button className="flex items-center w-full px-5 py-3 text-slate-500 hover:text-blue-600 hover:bg-white hover:shadow-sm rounded-xl transition-all group font-bold">
+        {/* <button className="flex items-center w-full px-5 py-3 text-slate-500 hover:text-blue-600 hover:bg-white hover:shadow-sm rounded-xl transition-all group font-bold">
           <Settings className="mr-3 h-4 w-4 group-hover:rotate-90 transition-transform duration-500" strokeWidth={2.5} />
           <span className="text-[10px] font-black uppercase tracking-widest">System Settings</span>
         </button>
-        
+         */}
         <LogoutButton />
       </div>
     </aside>

@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Navbar from "@/layout/home/Navbar";
 import Footer from "@/layout/home/Footer";
-import { useVets } from "@/hooks/vets"; // Import your new hook
+import { useVets } from "@/hooks/vets"; 
+import { useAuthStore } from "@/zustand/store/useAuthStore";
+import { toast } from "sonner"; 
 import {
   ShieldCheck,
   MapPin,
@@ -18,31 +20,49 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { VetCardProps } from "@/typescript/interface/vet";
+
+
+
+
+const SPECIALTIES = ["General", "Surgery", "Dermatology", "Nutrition", "Emergency"];
 
 export default function VetsDirectoryPage() {
   const [search, setSearch] = useState("");
+  const [selectedSpecialty, setSelectedSpecialty] = useState("All"); 
   
+  const { user } = useAuthStore(); 
   const { data: vets, isLoading, isError } = useVets(search);
 
-  const specialties = [
-    "General",
-    "Surgery",
-    "Dermatology",
-    "Nutrition",
-    "Emergency",
-  ];
+  const filteredVets = vets?.filter((vet: any) => {
+    if (selectedSpecialty === "All") return true;
+    return vet.specialty?.toLowerCase().includes(selectedSpecialty.toLowerCase());
+  });
+
+  const handleBookAppointment = (vetName: string) => {
+    if (!user) {
+      return toast.error("Authentication Required", {
+        description: `Please login to book an appointment with Dr. ${vetName}`,
+        action: {
+          label: "Login",
+          onClick: () => window.location.href = "/login"
+        },
+      });
+    }
+
+    toast.success(`Opening calendar for Dr. ${vetName}...`);
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
 
       <main className="pt-20">
-      
         <section className="bg-blue-50/50 border-b border-blue-100 py-16 px-6">
           <div className="max-w-7xl mx-auto space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
               <div className="space-y-2">
-                <Badge className="bg-blue-600 text-white hover:bg-blue-700 border-none px-4 py-1 rounded-full">
+                <Badge className="bg-blue-600 text-white hover:bg-blue-700 border-none px-4 py-1 rounded-full font-bold uppercase tracking-widest text-[10px]">
                   Professional Care
                 </Badge>
                 <h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter uppercase leading-none">
@@ -65,14 +85,25 @@ export default function VetsDirectoryPage() {
             </div>
 
             <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-              <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl px-8 font-bold">
+              <Button 
+                onClick={() => setSelectedSpecialty("All")}
+                className={`rounded-xl px-8 font-bold h-11 transition-all ${
+                  selectedSpecialty === "All" ? "bg-blue-600 text-white" : "bg-white text-slate-400 border-slate-200"
+                }`}
+                variant={selectedSpecialty === "All" ? "default" : "outline"}
+              >
                 All Doctors
               </Button>
-              {specialties.map((spec) => (
+              {SPECIALTIES.map((spec) => (
                 <Button
                   key={spec}
-                  variant="outline"
-                  className="rounded-xl border-slate-200 px-8 font-bold text-slate-400 bg-white hover:bg-blue-50 hover:text-blue-600 transition-all"
+                  onClick={() => setSelectedSpecialty(spec)}
+                  variant={selectedSpecialty === spec ? "default" : "outline"}
+                  className={`rounded-xl border-slate-200 px-8 font-bold h-11 transition-all ${
+                    selectedSpecialty === spec 
+                    ? "bg-blue-600 text-white" 
+                    : "bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600"
+                  }`}
                 >
                   {spec}
                 </Button>
@@ -86,24 +117,20 @@ export default function VetsDirectoryPage() {
 
         <section className="max-w-5xl mx-auto px-6 py-20 space-y-10 min-h-[500px]">
           {isLoading ? (
-          
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
               <Loader2 className="h-10 w-10 animate-spin mb-4 text-blue-600" />
               <p className="font-bold uppercase tracking-widest text-xs">Finding best doctors...</p>
             </div>
           ) : isError ? (
-           
             <div className="text-center py-20 text-red-500 font-bold uppercase tracking-widest">
               Failed to load doctors. Please try again.
             </div>
-          ) : vets?.length === 0 ? (
-           
+          ) : filteredVets?.length === 0 ? (
             <div className="text-center py-20 text-slate-400 font-bold uppercase tracking-widest">
-              No doctors found matching "{search}"
+              No doctors found matching "{search || selectedSpecialty}"
             </div>
           ) : (
-           
-            vets?.map((vet: any) => (
+            filteredVets?.map((vet: any) => (
               <VetCard
                 key={vet.id}
                 image={vet.profile_image_url || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000"} 
@@ -113,11 +140,11 @@ export default function VetsDirectoryPage() {
                 rating="5.0" 
                 reviews="0"
                 online={true} 
+                onBook={() => handleBookAppointment(vet.full_name)}
               />
             ))
           )}
         </section>
-
 
         <section className="bg-slate-950 py-16 mb-0">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12">
@@ -146,7 +173,7 @@ export default function VetsDirectoryPage() {
   );
 }
 
-function VetCard({ image, name, specialty, location, rating, reviews, online }: any) {
+function VetCard({ image, name, specialty, location, rating, reviews, online, onBook }: VetCardProps) {
   return (
     <div className="group bg-white p-8 rounded-[3rem] border border-slate-100 flex flex-col md:flex-row gap-10 items-center shadow-sm hover:shadow-2xl transition-all duration-500">
       <div className="relative">
@@ -194,7 +221,10 @@ function VetCard({ image, name, specialty, location, rating, reviews, online }: 
       </div>
 
       <div className="w-full md:w-auto flex flex-col gap-3">
-        <Button className="bg-blue-600 hover:bg-slate-950 h-16 px-10 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] shadow-xl shadow-blue-100 transition-all active:scale-95">
+        <Button 
+          onClick={onBook} 
+          className="bg-blue-600 hover:bg-slate-950 h-16 px-10 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] shadow-xl shadow-blue-100 transition-all active:scale-95"
+        >
           Book Appointment
         </Button>
         <Button variant="ghost" className="text-slate-300 font-black uppercase tracking-widest text-[9px] hover:text-blue-600 transition-colors">

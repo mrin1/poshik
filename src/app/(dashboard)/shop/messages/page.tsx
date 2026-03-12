@@ -24,7 +24,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-// Static mock data
 const shopConversations = [
   { id: "c-101", name: "Mrinmoy Ghosh", lastMessage: "Is the Golden Retriever food back in stock?", time: "10:30 AM", unread: 2, orderId: "ORD-5542", avatar: "" },
   { id: "c-102", name: "Aditi Rao", lastMessage: "Thank you for the fast delivery!", time: "Yesterday", unread: 0, orderId: "ORD-5510", avatar: "" },
@@ -42,7 +41,7 @@ export default function ShopMessagesPage() {
   const [messageInput, setMessageInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fix Hydration: Ensure client-only components render after mount
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -55,7 +54,6 @@ export default function ShopMessagesPage() {
     <div className="flex flex-col h-[calc(100vh-10rem)] bg-white border-none shadow-2xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden">
       <div className="flex h-full">
         
-        {/* LEFT SIDEBAR: CUSTOMER QUEUE (380px) */}
         <div className="w-full md:w-[380px] border-r border-slate-100 flex flex-col bg-slate-50/30">
           <div className="p-8 pb-6">
             <h1 className="text-4xl font-[900] uppercase tracking-tighter text-slate-900 leading-none mb-6">
@@ -112,9 +110,8 @@ export default function ShopMessagesPage() {
           </ScrollArea>
         </div>
 
-        {/* CENTER PANE: CHAT WINDOW (Fluid) */}
         <div className="flex-1 flex flex-col bg-white">
-          {/* Header */}
+        
           <div className="h-24 flex items-center justify-between px-8 border-b border-slate-50">
             <div className="flex items-center gap-4">
               <Avatar className="h-12 w-12 rounded-2xl shadow-sm">
@@ -145,7 +142,7 @@ export default function ShopMessagesPage() {
             </div>
           </div>
 
-          {/* Messages Area */}
+       
           <ScrollArea className="flex-1 p-8 bg-slate-50/30">
             <div className="space-y-6 max-w-4xl mx-auto">
               {mockChatHistory.map((msg) => (
@@ -171,7 +168,7 @@ export default function ShopMessagesPage() {
             </div>
           </ScrollArea>
 
-          {/* Input Area */}
+      
           <div className="p-8 border-t border-slate-50 bg-white">
             <div className="max-w-4xl mx-auto flex items-center gap-4">
               <div className="flex gap-2">
@@ -200,7 +197,7 @@ export default function ShopMessagesPage() {
           </div>
         </div>
 
-        {/* RIGHT SIDEBAR: CONTEXTUAL INFO (260px) */}
+        
         <div className="hidden xl:flex w-[300px] border-l border-slate-50 p-8 flex-col gap-8 bg-white">
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 mb-6">Customer Profile</h4>

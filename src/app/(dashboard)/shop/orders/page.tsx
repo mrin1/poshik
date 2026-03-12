@@ -25,7 +25,6 @@ export default function ShopOrdersPage() {
 
   useEffect(() => setMounted(true), []);
 
-  // Compute Stats Dynamically from Live Data
   const stats = useMemo(() => {
     if (!orders) return { pending: 0, logistics: 0, sales: 0 };
     return {
@@ -35,7 +34,6 @@ export default function ShopOrdersPage() {
     };
   }, [orders]);
 
-  // Filter Logic
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
     return orders.filter((order) => {
@@ -65,7 +63,7 @@ export default function ShopOrdersPage() {
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8 bg-[#f8fafc] min-h-screen">
-      {/* HEADER */}
+  
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-2">
           <h1 className="text-5xl font-[900] uppercase tracking-tighter text-slate-900 leading-none">
@@ -77,14 +75,14 @@ export default function ShopOrdersPage() {
         </div>
       </div>
 
-      {/* QUICK STATS */}
+  
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <OrderStatCard label="Incoming Orders" val={stats.pending} icon={<Clock />} color="orange" />
         <OrderStatCard label="In Logistics" val={stats.logistics} icon={<Package />} color="blue" />
         <OrderStatCard label="Gross Sales" val={`₹${stats.sales.toLocaleString()}`} icon={<ArrowUpRight />} color="emerald" />
       </div>
 
-      {/* TABLE SECTION */}
+      
       <div className="bg-white border-none shadow-xl rounded-[2.5rem] overflow-hidden">
         <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full">
           <div className="p-8 border-b border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -200,7 +198,7 @@ export default function ShopOrdersPage() {
   );
 }
 
-// Internal Stat Mini-Component
+
 function OrderStatCard({ label, val, icon, color }: any) {
   const colors: any = {
     orange: "bg-orange-50 text-orange-600",

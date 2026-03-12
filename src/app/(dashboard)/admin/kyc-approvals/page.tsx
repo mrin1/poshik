@@ -186,7 +186,7 @@ export default function KYCApprovalsPage() {
             Platform <br /> Directory
           </h1>
           <p className="text-slate-500 font-medium text-sm flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-orange-600" /> Oversee all registered users and verify platform compliance[cite: 8, 14].
+            <ShieldCheck className="h-4 w-4 text-orange-600" /> Oversee all registered users and verify platform compliance.
           </p>
         </div>
         

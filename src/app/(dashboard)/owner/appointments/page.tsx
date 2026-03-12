@@ -95,7 +95,7 @@ export default function VetAppointmentsPage() {
           <h1 className="text-5xl font-[900] uppercase tracking-tighter text-slate-900 leading-none">Find <br /> A Vet</h1>
           <p className="text-slate-500 font-medium text-sm flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-orange-600" /> 
-            Verified medical consultations for your pets[cite: 7, 13].
+            Verified medical consultations for your pets.
           </p>
         </div>
 
@@ -170,7 +170,7 @@ export default function VetAppointmentsPage() {
               <DialogHeader className="mb-8">
                 <DialogTitle className="text-3xl font-[900] uppercase tracking-tighter leading-none">Schedule <br /> Appointment</DialogTitle>
                 <DialogDescription className="text-slate-400 font-medium pt-2 text-xs uppercase tracking-widest">
-                    Consultation with {selectedDoc?.full_name} [cite: 80]
+                    Consultation with {selectedDoc?.full_name}
                 </DialogDescription>
               </DialogHeader>
               <Calendar
@@ -186,7 +186,7 @@ export default function VetAppointmentsPage() {
               <div className="space-y-6">
                 <div>
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center">
-                    <ShieldCheck className="h-4 w-4 mr-2 text-blue-600" /> Select Patient Pet [cite: 50]
+                    <ShieldCheck className="h-4 w-4 mr-2 text-blue-600" /> Select Patient Pet
                   </h4>
                   <Select onValueChange={setSelectedPetId} value={selectedPetId}>
                     <SelectTrigger className="h-14 rounded-2xl bg-slate-50 border-none font-bold text-slate-700 shadow-inner">
@@ -195,7 +195,7 @@ export default function VetAppointmentsPage() {
                     <SelectContent className="rounded-2xl border-none shadow-2xl">
                       {petsQuery.data?.map(pet => (
                         <SelectItem key={pet.id} value={pet.id} className="font-bold text-xs uppercase cursor-pointer">
-                            {pet.name} ({pet.breed}) [cite: 48]
+                            {pet.name} ({pet.breed})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -204,7 +204,7 @@ export default function VetAppointmentsPage() {
 
                 <div>
                   <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-blue-600" /> Choose Time Slot [cite: 82, 83]
+                    <Clock className="h-4 w-4 mr-2 text-blue-600" /> Choose Time Slot 
                   </h4>
                   <div className="grid grid-cols-1 gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
                     {timeSlots.map(time => (

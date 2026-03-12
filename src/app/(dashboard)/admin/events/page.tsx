@@ -59,7 +59,6 @@ export default function AdminEventsPage() {
   const [mounted, setMounted] = useState(false);
   const { user } = useAuthStore();
   
-  // UI States
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [isDialogOpen, setIsDialogOpen] = useState(false);

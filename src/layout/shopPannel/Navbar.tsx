@@ -17,11 +17,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Hooks & State Management
 import { useAuthStore } from "@/zustand/store/useAuthStore";
 import { useCart } from "@/hooks/useCart";
 
-// UI Components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,25 +37,24 @@ export default function Navbar() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   
-  // Dynamic Data Extraction
-  const { user, logout } = useAuthStore(); // Source: Register Table / Auth Session
-  const { cartCount, isLoaded } = useCart(); // Source: Live Cart State
+
+  const { user, logout } = useAuthStore(); 
+  const { cartCount, isLoaded } = useCart(); 
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Handle Logout
+
   const handleSignOut = async () => {
     await logout();
     router.push("/login");
   };
 
-  // Prevent Hydration Mismatch
+
   if (!mounted)
     return <div className="h-20 bg-white border-b border-slate-50 w-full" />;
 
-  // Generate Initials for Fallback
   const initials = user?.full_name
     ? user.full_name.split(" ").map((n) => n[0]).join("").toUpperCase()
     : "GU";
@@ -65,7 +62,7 @@ export default function Navbar() {
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-6 md:px-10 shrink-0 z-50 sticky top-0">
       
-      {/* LEFT: BRANDING & MOBILE TRIGGER */}
+  
       <div className="flex items-center gap-4">
         <Button
           variant="ghost"
@@ -93,7 +90,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* CENTER: DYNAMIC SEARCH & LOCATION */}
+  
       <div className="hidden md:flex flex-1 max-w-2xl mx-12 items-center gap-4">
         <div className="relative flex-1 group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 group-focus-within:text-orange-500 transition-colors" />
@@ -111,7 +108,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* RIGHT: ACTIONS & USER PROFILE */}
+  
       <div className="flex items-center gap-2 md:gap-4">
         <Button
           variant="ghost"
@@ -121,7 +118,7 @@ export default function Navbar() {
           <PlusCircle size={22} strokeWidth={2.5} />
         </Button>
 
-        {/* Dynamic Cart Badge */}
+  
         <div className="relative group">
           <Button
             onClick={() => router.push("/cart")}
@@ -138,7 +135,7 @@ export default function Navbar() {
           </Button>
         </div>
 
-        {/* Notifications */}
+    
         <div className="relative group">
           <Button
             variant="ghost"
@@ -154,7 +151,7 @@ export default function Navbar() {
 
         <div className="h-8 w-[1px] bg-slate-100 mx-2 hidden sm:block" />
 
-        {/* DYNAMIC PROFILE DROPDOWN */}
+  
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex items-center gap-3 cursor-pointer group">

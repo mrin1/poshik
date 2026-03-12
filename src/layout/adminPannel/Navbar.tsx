@@ -5,16 +5,13 @@ import { Bell, Menu, ShieldCheck, UserCircle, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-// 1. Import your Zustand authentication store
 import { useAuthStore } from "@/zustand/store/useAuthStore"; 
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   
-  // 2. Extract the active user session securely
   const { user } = useAuthStore(); 
 
-  // Fix Hydration: Ensure client-only UI (like notification dots) renders after mount
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -24,7 +21,7 @@ export default function Navbar() {
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 shrink-0 z-50 sticky top-0">
       
-      {/* LEFT: BRANDING & MOBILE TRIGGER */}
+    
       <div className="flex items-center gap-4">
         <button className="lg:hidden p-2 hover:bg-slate-50 rounded-xl text-slate-900 transition-colors">
           <Menu className="h-6 w-6" />
@@ -41,7 +38,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* CENTER: SYSTEM SEARCH (Contextual for Admin) */}
+
       <div className="hidden md:flex flex-1 max-w-md mx-12">
         <div className="relative w-full group">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 group-focus-within:text-slate-900 transition-colors" />
@@ -52,9 +49,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* RIGHT: NOTIFICATIONS & USER PROFILE */}
+
       <div className="flex items-center gap-6">
-        {/* Notification Hub */}
+      
         <button className="group relative h-12 w-12 flex items-center justify-center rounded-2xl hover:bg-slate-50 transition-all">
           <Bell className="h-5 w-5 text-slate-400 group-hover:text-slate-900 transition-colors" />
           <span className="absolute top-3 right-3 h-2 w-2 bg-orange-600 rounded-full border-2 border-white animate-in zoom-in"></span>
@@ -62,16 +59,16 @@ export default function Navbar() {
 
         <Separator />
 
-        {/* Profile Section */}
+  
         <div className="flex items-center gap-4 pl-2">
           <div className="hidden sm:block text-right">
             
-            {/* 3. DYNAMIC USER NAME */}
+  
             <p className="text-sm font-[900] uppercase tracking-tight text-slate-900 leading-none">
               {user?.full_name || "System Admin"}
             </p>
             
-            {/* 4. DYNAMIC ROLE BADGE */}
+      
             <Badge variant="outline" className="mt-1.5 border-none bg-orange-50 text-orange-600 font-black text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-full">
               {user?.role === "SUPER-ADMIN" ? "Super Admin" : "Admin"}
             </Badge>
@@ -86,7 +83,6 @@ export default function Navbar() {
   );
 }
 
-// Internal Separator
 function Separator() {
   return <div className="h-8 w-[1px] bg-slate-100 hidden sm:block" />;
 }

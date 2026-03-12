@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useAuthStore } from "@/zustand/store/useAuthStore"; // Import your store
+import { useAuthStore } from "@/zustand/store/useAuthStore"; 
 
 export default function DoctorNavbar() {
   const [mounted, setMounted] = useState(false);
-  const { user } = useAuthStore(); // Get the real doctor data
+  const { user } = useAuthStore(); 
 
   useEffect(() => {
     setMounted(true);
@@ -18,7 +18,7 @@ export default function DoctorNavbar() {
 
   if (!mounted) return <div className="h-20 bg-white border-b border-slate-50 w-full" />;
 
-  // Create Initials for Fallback (e.g., "Mrinmoy Ghosh" -> "MG")
+
   const initials = user?.full_name
     ? user.full_name.split(" ").map(n => n[0]).join("").toUpperCase()
     : "DR";
@@ -26,7 +26,7 @@ export default function DoctorNavbar() {
   return (
     <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-6 sm:px-10 shrink-0 z-50 sticky top-0">
       
-      {/* LEFT & CENTER remain the same... */}
+  
       <div className="flex items-center gap-5">
         <Button variant="ghost" size="icon" className="lg:hidden h-10 w-10 rounded-xl hover:bg-slate-50 transition-colors">
           <Menu className="h-6 w-6 text-slate-900" />
@@ -52,7 +52,6 @@ export default function DoctorNavbar() {
         </div>
       </div>
 
-      {/* RIGHT: DYNAMIC DOCTOR PROFILE */}
       <div className="flex items-center gap-6">
         <button className="group relative h-12 w-12 flex items-center justify-center rounded-2xl hover:bg-slate-50 transition-all">
           <Bell className="h-5 w-5 text-slate-400 group-hover:text-blue-600 transition-colors" />
@@ -63,7 +62,7 @@ export default function DoctorNavbar() {
 
         <div className="flex items-center gap-4">
           <div className="hidden sm:block text-right">
-            {/* RECTIFICATION: Dynamic Name */}
+          
             <p className="text-sm font-[900] uppercase tracking-tight text-slate-900 leading-none">
                {user?.full_name || "Doctor"}
             </p>
@@ -74,7 +73,7 @@ export default function DoctorNavbar() {
           
           <div className="h-12 w-12 rounded-2xl border-2 border-white shadow-md overflow-hidden group cursor-pointer hover:border-blue-100 transition-all ring-1 ring-slate-100">
              <Avatar className="h-full w-full rounded-none">
-                {/* RECTIFICATION: Uses KYC image if available, else Fallback initials */}
+          
                 <AvatarImage src={user?.kyc_document_url || ""} alt={user?.full_name} className="object-cover" />
                 <AvatarFallback className="bg-blue-600 text-white font-black text-xs uppercase">
                   {initials}

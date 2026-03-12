@@ -1,87 +1,74 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+"use client";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
+
 
 export interface Conversation {
   id: string;
   ownerName: string;
   petName: string;
-  lastMessage: string;
   time: string;
+  lastMessage: string;
   unread: number;
 }
 
-export function useChat(doctorId: string | undefined) {
-  const queryClient = useQueryClient();
-
-  const inboxes = useQuery({
-    queryKey: ["conversations", doctorId],
-    queryFn: async (): Promise<Conversation[]> => {
-      if (!doctorId) return [];
+export function useConversations(userId: string | undefined) {
+  return useQuery({
+    queryKey: ["conversations", userId],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from("conversations")
-        .select(
-          `
-          id, updated_at,
-          owner:register!owner_id ( full_name ),
-          pets ( name ),
-          messages ( text, created_at, is_read, sender_id )
-        `,
-        )
-        .eq("doctor_id", doctorId)
+        .select("*")
+        .eq("owner_id", userId)
         .order("updated_at", { ascending: false });
 
       if (error) throw error;
-
-      return (data || []).map((conv: any) => {
-        const sorted = conv.messages?.sort(
-          (a: any, b: any) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        );
-        const lastMsg = sorted?.[0];
-        const unread =
-          conv.messages?.filter(
-            (m: any) => !m.is_read && m.sender_id !== doctorId,
-          ).length || 0;
-
-        return {
-          id: conv.id,
-          ownerName: conv.owner?.full_name || "Unknown Owner",
-          petName: conv.pets?.name || "General Consult",
-          lastMessage: lastMsg?.text || "No messages yet.",
-          time: lastMsg
-            ? new Date(lastMsg.created_at).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "",
-          unread,
-        };
-      });
+      return data || [];
     },
-    enabled: !!doctorId,
+    enabled: !!userId,
   });
+}
 
-  useEffect(() => {
-    if (!doctorId) return;
+export function useMessages(conversationId: string | undefined) {
+  return useQuery({
+    queryKey: ["messages", conversationId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true }); 
 
-    const channel = supabase
-      .channel("global_inbox_updates")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["conversations", doctorId],
-          });
-        },
-      )
-      .subscribe();
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!conversationId,
+    refetchInterval: 3000, 
+  });
+}
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [doctorId, queryClient]);
+export function useSendMessage() {
+  const queryClient = useQueryClient();
 
-  return { inboxes };
+  return useMutation({
+    mutationFn: async ({ conversationId, senderId, text }: { conversationId: string, senderId: string, text: string }) => {
+      const { data, error } = await supabase
+        .from("messages")
+        .insert([{ conversation_id: conversationId, sender_id: senderId, text }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (newMessage) => {
+    
+      queryClient.setQueryData(["messages", newMessage.conversation_id], (oldMessages: any) => {
+        return [...(oldMessages || []), newMessage];
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    }
+  });
 }

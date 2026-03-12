@@ -105,7 +105,7 @@ export default function AdminUsersPage() {
         .eq("id", id);
 
       if (error) {
-        // Revert UI if DB fails
+        
         setUsers((prev) =>
           prev.map((u) =>
             u.id === id

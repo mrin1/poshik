@@ -4,15 +4,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Conversation } from "@/hooks/useChat";
+import { SidebarProps } from "@/typescript/interface/chat";
 
-interface SidebarProps {
-  conversations: Conversation[];
-  activeId: string | null;
-  onSelect: (id: string) => void;
-  isLoading: boolean;
-  searchQuery: string;
-  setSearchQuery: (val: string) => void;
-}
 
 export function ChatSidebar({ conversations, activeId, onSelect, isLoading, searchQuery, setSearchQuery }: SidebarProps) {
   const filtered = conversations.filter(c => 

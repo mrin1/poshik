@@ -39,7 +39,7 @@ export default function DoctorAppointmentsPage() {
   return (
     <div className="flex flex-col gap-8 p-4 md:p-8 bg-[#f8fafc] min-h-screen">
       <header className="flex flex-col gap-2">
-        <h1 className="text-5xl font-[900] uppercase tracking-tighter text-slate-900">Archive</h1>
+        <h1 className="text-5xl font-[900] uppercase tracking-tighter text-slate-900">Records</h1>
         <p className="text-slate-500 font-medium text-sm flex items-center gap-2">
           <CalendarDays className="h-4 w-4 text-blue-600" /> 
           {isLoading ? "Syncing..." : `${filteredData.length} records found.`}

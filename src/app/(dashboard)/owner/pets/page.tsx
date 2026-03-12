@@ -145,11 +145,11 @@ export default function OwnerPetsPage() {
                 <MetricItem label="Sex" val={pet.gender} icon={<Activity size={12} />} />
               </div>
             </CardContent>
-            <CardFooter className="px-8 pb-8 pt-0">
+            {/* <CardFooter className="px-8 pb-8 pt-0">
               <Button variant="outline" className="w-full h-14 rounded-2xl border-2 border-slate-100 font-black text-[10px] uppercase tracking-widest group-hover:border-blue-600">
                 View Medical Records [cite: 48, 52] <ChevronRight className="ml-2 h-3 w-3" />
               </Button>
-            </CardFooter>
+            </CardFooter> */}
           </Card>
         ))}
       </div>

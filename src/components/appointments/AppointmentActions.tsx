@@ -9,12 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { AppointmentActionsProps } from "@/typescript/interface/appointments";
 
-interface AppointmentActionsProps {
-  id: string;
-  status: string;
-  onUpdateStatus: (id: string, status: string) => void;
-}
+
 
 export const AppointmentActions = ({ id, status, onUpdateStatus }: AppointmentActionsProps) => {
   return (

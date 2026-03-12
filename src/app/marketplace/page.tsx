@@ -5,15 +5,17 @@ import Navbar from "@/layout/home/Navbar";
 import Footer from "@/layout/home/Footer";
 import { useProducts } from "@/hooks/useProducts";
 import { useCart } from "@/hooks/useCart";
+import { useAuthStore } from "@/zustand/store/useAuthStore";
+import { toast } from "sonner";
 import { Search, Star, Filter, Heart, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ProductCardProps } from "@/typescript/interface/marketplace";
 
-// 🔥 OPTIMIZATION 1: Move static arrays outside component to prevent re-creation on every render
+
 const CATEGORIES = ["Nutrition", "Toys", "Health", "Leashes", "Comfort"];
 
-// 🔥 OPTIMIZATION 2: Dynamic online fallback images based on category for a professional look
 const FALLBACK_IMAGES: Record<string, string> = {
   Nutrition: "https://images.unsplash.com/photo-1585822314491-039c3666d9c6?q=80&w=600&auto=format&fit=crop",
   Toys: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?q=80&w=600&auto=format&fit=crop",
@@ -27,13 +29,26 @@ export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   
+  const { user } = useAuthStore();
   const { data: products, isLoading } = useProducts(selectedCategory, searchQuery);
   const { addToCart } = useCart();
+
+  const handleAddToCart = (productId: string, stock: number) => {
+    if (!user) {
+      return toast.error("Please login to add items to your basket", {
+        description: "Join our community to start shopping!",
+        action: {
+          label: "Login",
+          onClick: () => window.location.href = "/login"
+        },
+      });
+    }
+    addToCart(productId, stock);
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans">
       <Navbar />
-
       <main className="pt-20">
         <section className="bg-slate-50 border-b border-slate-100 py-16 px-6">
           <div className="max-w-7xl mx-auto space-y-8">
@@ -83,9 +98,6 @@ export default function MarketplacePage() {
                   {cat}
                 </Button>
               ))}
-              <Button variant="ghost" className="rounded-xl px-4 text-slate-400 hover:text-emerald-600 h-12">
-                <Filter className="h-5 w-5" />
-              </Button>
             </div>
           </div>
         </section>
@@ -95,10 +107,6 @@ export default function MarketplacePage() {
             <div className="flex flex-col items-center justify-center py-32 text-slate-400">
               <Loader2 className="h-10 w-10 animate-spin mb-4 text-emerald-600" />
               <p className="font-black uppercase tracking-widest text-[10px]">Curating supplies...</p>
-            </div>
-          ) : products?.length === 0 ? (
-            <div className="text-center py-32 text-slate-400 font-black uppercase tracking-widest text-sm bg-slate-50 rounded-[3rem]">
-              No products found for "{searchQuery || selectedCategory}"
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -110,7 +118,7 @@ export default function MarketplacePage() {
                   shop={product.shop_name}
                   price={Number(product.price)} 
                   stock={product.stock}
-                  onAdd={() => addToCart(product.id, product.stock)} 
+                  onAdd={() => handleAddToCart(product.id, product.stock)}
                 />
               ))}
             </div>
@@ -122,15 +130,6 @@ export default function MarketplacePage() {
   );
 }
 
-interface ProductCardProps {
-  image: string;
-  name: string;
-  shop: string;
-  price: number;
-  stock: number;
-  onAdd: () => void;
-}
-
 function ProductCard({ image, name, shop, price, stock, onAdd }: ProductCardProps) {
   return (
     <div className="group cursor-pointer flex flex-col h-full">
@@ -139,23 +138,13 @@ function ProductCard({ image, name, shop, price, stock, onAdd }: ProductCardProp
           src={image} 
           className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" 
           alt={name} 
-          loading="lazy" 
         />
         
         <div className="absolute top-6 left-6 flex flex-col gap-2">
           <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-2xl text-[10px] font-black flex items-center gap-1 shadow-sm text-slate-900">
             <Star className="h-3 w-3 text-amber-500 fill-current" /> 4.9
           </div>
-          {stock <= 5 && stock > 0 && (
-            <div className="bg-orange-600/90 backdrop-blur text-white px-3 py-1.5 rounded-2xl text-[9px] font-black uppercase tracking-widest">
-              Only {stock} left
-            </div>
-          )}
         </div>
-
-        <button className="absolute top-6 right-6 p-3 bg-white/90 backdrop-blur rounded-full text-slate-400 hover:text-red-500 transition-colors">
-          <Heart className="h-4 w-4" />
-        </button>
 
         <div className="absolute bottom-6 left-6 right-6 translate-y-24 group-hover:translate-y-0 transition-transform duration-500">
           <Button 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { supabase } from "@/utils/supabase";
 import { AuthState, UserProfile } from "@/typescript/interface/auth";
+import { toast } from "sonner";
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
@@ -20,6 +21,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         password,
       });
       if (error) throw error;
+      toast.success("Login successfully");
 
       const { data: profileData, error: profileError } = await supabase
         .from("register")
@@ -116,13 +118,18 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     try {
       const { error } = await supabase.auth.signOut();
+
       if (error) throw error;
 
-      window.location.href = "/login";
-    } catch (error: any) {
-      console.error("Logout error:", error.message);
+      window.location.href = "/";
 
-      window.location.href = "/login";
+      toast.success("Logout successfully");
+    } catch (error: any) {
+      //console.error("Logout error:", error.message);
+
+      toast.error("Error");
+
+      window.location.href = "/";
     } finally {
       set({ isLoading: false });
     }

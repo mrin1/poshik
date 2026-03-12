@@ -91,7 +91,7 @@ export default function OwnerDashboardPage() {
                 </div>
               )}
               <Button 
-                onClick={() => router.push("/owner/appointments/book")}
+                onClick={() => router.push("/owner/appointments")}
                 className="w-full h-14 mt-6 rounded-2xl bg-slate-950 text-xs font-black uppercase tracking-widest text-white hover:bg-orange-600 shadow-xl"
               >
                 Book New Consultation
