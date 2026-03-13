@@ -14,7 +14,7 @@ export function useOrders(shopId: string | undefined) {
       const { data, error } = await supabase
         .from("orders")
         .select("*")
-       // .eq("shop_id", shopId)
+        // .eq("shop_id", shopId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -24,7 +24,13 @@ export function useOrders(shopId: string | undefined) {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+    mutationFn: async ({
+      orderId,
+      status,
+    }: {
+      orderId: string;
+      status: string;
+    }) => {
       const { data, error } = await supabase
         .from("orders")
         .update({ status })

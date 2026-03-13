@@ -7,7 +7,6 @@ export function useHomeData() {
   return useQuery({
     queryKey: ["home-data-v2"],
     queryFn: async () => {
-
       const [pets, vets, shops, owners, eventsResponse] = await Promise.all([
         supabase.from("pets").select("*", { count: "exact", head: true }),
         supabase
@@ -37,7 +36,7 @@ export function useHomeData() {
           shops: shops.count || 0,
           owners: owners.count || 0,
         },
-        events: (eventsResponse.data as any[]) || [], 
+        events: (eventsResponse.data as any[]) || [],
       };
     },
     staleTime: 0,

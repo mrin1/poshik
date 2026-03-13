@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 const categories = ["All", "Food", "Toys", "Accessories", "Grooming"];
 
 export default function PetShopPage() {
-   const router = useRouter()
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -78,7 +78,10 @@ export default function PetShopPage() {
             />
           </div>
 
-          <Button   onClick={() => router.push("/owner/cart")} className="h-14 px-6 rounded-2xl bg-slate-950 hover:bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest relative transition-all shadow-xl active:scale-95">
+          <Button
+            onClick={() => router.push("/owner/cart")}
+            className="h-14 px-6 rounded-2xl bg-slate-950 hover:bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest relative transition-all shadow-xl active:scale-95"
+          >
             <ShoppingCart className="h-5 w-5 md:mr-3" />
             <span className="hidden md:inline">Cart</span>
             {cartLoaded && cartCount > 0 && (
@@ -164,7 +167,6 @@ export default function PetShopPage() {
 
               <CardFooter className="p-8 pt-4">
                 <Button
-                  
                   className={`w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all shadow-xl active:scale-95 ${
                     product.stock === 0
                       ? "bg-slate-100 text-slate-300 cursor-not-allowed"

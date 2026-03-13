@@ -5,10 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { Product } from "@/typescript/interface/product";
 
-
 export function useProducts(category: string = "All", search: string = "") {
   return useQuery({
-    queryKey: ["shop-products", category, search ],
+    queryKey: ["shop-products", category, search],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
@@ -20,6 +19,6 @@ export function useProducts(category: string = "All", search: string = "") {
         throw error;
       }
       return data as Product[];
-    }
+    },
   });
 }

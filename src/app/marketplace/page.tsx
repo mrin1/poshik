@@ -12,25 +12,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ProductCardProps } from "@/typescript/interface/marketplace";
-
-
-const CATEGORIES = ["Nutrition", "Toys", "Health", "Leashes", "Comfort"];
-
-const FALLBACK_IMAGES: Record<string, string> = {
-  Nutrition: "https://images.unsplash.com/photo-1585822314491-039c3666d9c6?q=80&w=600&auto=format&fit=crop",
-  Toys: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?q=80&w=600&auto=format&fit=crop",
-  Health: "https://images.unsplash.com/photo-1628009368231-7bb7cbcb8127?q=80&w=600&auto=format&fit=crop",
-  Leashes: "https://images.unsplash.com/photo-1544437134-119c6328bc6e?q=80&w=600&auto=format&fit=crop",
-  Comfort: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=600&auto=format&fit=crop",
-  Default: "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?q=80&w=600&auto=format&fit=crop"
-};
+import { CATEGORIES, FALLBACK_IMAGES } from "@/utils/marketplace";
 
 export default function MarketplacePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  
+
   const { user } = useAuthStore();
-  const { data: products, isLoading } = useProducts(selectedCategory, searchQuery);
+  const { data: products, isLoading } = useProducts(
+    selectedCategory,
+    searchQuery,
+  );
   const { addToCart } = useCart();
 
   const handleAddToCart = (productId: string, stock: number) => {
@@ -39,7 +31,7 @@ export default function MarketplacePage() {
         description: "Join our community to start shopping!",
         action: {
           label: "Login",
-          onClick: () => window.location.href = "/login"
+          onClick: () => (window.location.href = "/login"),
         },
       });
     }
@@ -61,10 +53,11 @@ export default function MarketplacePage() {
                   Marketplace
                 </h1>
                 <p className="text-slate-500 max-w-lg font-medium">
-                  Discover premium supplies from verified sellers across the Poshik community.
+                  Discover premium supplies from verified sellers across the
+                  Poshik community.
                 </p>
               </div>
-              
+
               <div className="relative w-full md:w-96 group">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
                 <Input
@@ -77,22 +70,26 @@ export default function MarketplacePage() {
             </div>
 
             <div className="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
-              <Button 
+              <Button
                 onClick={() => setSelectedCategory("All")}
                 className={`rounded-xl px-8 font-black uppercase tracking-widest text-[10px] h-12 transition-all ${
-                  selectedCategory === "All" ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white text-slate-500'
+                  selectedCategory === "All"
+                    ? "bg-emerald-600 text-white shadow-lg"
+                    : "bg-white text-slate-500"
                 }`}
                 variant={selectedCategory === "All" ? "default" : "outline"}
               >
                 All Items
               </Button>
               {CATEGORIES.map((cat) => (
-                <Button 
-                  key={cat} 
+                <Button
+                  key={cat}
                   onClick={() => setSelectedCategory(cat)}
                   variant={selectedCategory === cat ? "default" : "outline"}
                   className={`rounded-xl px-8 font-black uppercase tracking-widest text-[10px] h-12 transition-all ${
-                    selectedCategory === cat ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white text-slate-500 hover:text-emerald-600'
+                    selectedCategory === cat
+                      ? "bg-emerald-600 text-white shadow-lg"
+                      : "bg-white text-slate-500 hover:text-emerald-600"
                   }`}
                 >
                   {cat}
@@ -106,17 +103,23 @@ export default function MarketplacePage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-32 text-slate-400">
               <Loader2 className="h-10 w-10 animate-spin mb-4 text-emerald-600" />
-              <p className="font-black uppercase tracking-widest text-[10px]">Curating supplies...</p>
+              <p className="font-black uppercase tracking-widest text-[10px]">
+                Curating supplies...
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
               {products?.map((product: any) => (
-                <ProductCard 
+                <ProductCard
                   key={product.id}
-                  image={product.image_url || FALLBACK_IMAGES[product.category] || FALLBACK_IMAGES.Default}
+                  image={
+                    product.image_url ||
+                    FALLBACK_IMAGES[product.category] ||
+                    FALLBACK_IMAGES.Default
+                  }
                   name={product.name}
                   shop={product.shop_name}
-                  price={Number(product.price)} 
+                  price={Number(product.price)}
                   stock={product.stock}
                   onAdd={() => handleAddToCart(product.id, product.stock)}
                 />
@@ -130,16 +133,23 @@ export default function MarketplacePage() {
   );
 }
 
-function ProductCard({ image, name, shop, price, stock, onAdd }: ProductCardProps) {
+function ProductCard({
+  image,
+  name,
+  shop,
+  price,
+  stock,
+  onAdd,
+}: ProductCardProps) {
   return (
     <div className="group cursor-pointer flex flex-col h-full">
       <div className="aspect-square rounded-[2.5rem] mb-6 relative overflow-hidden bg-slate-100 shadow-sm transition-all duration-500 group-hover:shadow-xl">
-        <img 
-          src={image} 
-          className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" 
-          alt={name} 
+        <img
+          src={image}
+          className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+          alt={name}
         />
-        
+
         <div className="absolute top-6 left-6 flex flex-col gap-2">
           <div className="bg-white/90 backdrop-blur px-3 py-1.5 rounded-2xl text-[10px] font-black flex items-center gap-1 shadow-sm text-slate-900">
             <Star className="h-3 w-3 text-amber-500 fill-current" /> 4.9
@@ -147,11 +157,16 @@ function ProductCard({ image, name, shop, price, stock, onAdd }: ProductCardProp
         </div>
 
         <div className="absolute bottom-6 left-6 right-6 translate-y-24 group-hover:translate-y-0 transition-transform duration-500">
-          <Button 
+          <Button
             disabled={stock === 0}
-            onClick={(e) => { e.stopPropagation(); onAdd(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAdd();
+            }}
             className={`w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${
-              stock === 0 ? "bg-slate-800 text-slate-400" : "bg-slate-950 hover:bg-emerald-600 text-white"
+              stock === 0
+                ? "bg-slate-800 text-slate-400"
+                : "bg-slate-950 hover:bg-emerald-600 text-white"
             }`}
           >
             {stock === 0 ? "Out of Stock" : "Add to Basket"}
@@ -165,7 +180,7 @@ function ProductCard({ image, name, shop, price, stock, onAdd }: ProductCardProp
             {name}
           </h3>
           <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest flex items-center gap-1 mt-2">
-             {shop} <ArrowRight className="h-3 w-3" />
+            {shop} <ArrowRight className="h-3 w-3" />
           </p>
         </div>
         <p className="text-2xl font-[900] text-slate-900 pt-4">

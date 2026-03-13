@@ -9,7 +9,9 @@ export const StatusBadge = ({ status }: { status: string }) => {
   };
 
   return (
-    <Badge className={`${styles[status] || "bg-slate-50 text-slate-500"} border-none font-black text-[9px] uppercase tracking-widest px-3 py-1`}>
+    <Badge
+      className={`${styles[status] || "bg-slate-50 text-slate-500"} border-none font-black text-[9px] uppercase tracking-widest px-3 py-1`}
+    >
       {status === "PENDING" ? "Awaiting" : status}
     </Badge>
   );

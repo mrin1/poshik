@@ -2,19 +2,14 @@ import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Dashboard | Poshik",
-    description: "Manage your account and platform activities.",
+  title: "Dashboard | Poshik",
+  description: "Manage your account and platform activities.",
 };
 
 export default function DashboardLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-
-        <div className="min-h-screen bg-slate-50 w-full">
-            {children}
-        </div>
-    );
+  return <div className="min-h-screen bg-slate-50 w-full">{children}</div>;
 }

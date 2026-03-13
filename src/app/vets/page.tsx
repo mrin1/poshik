@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Navbar from "@/layout/home/Navbar";
 import Footer from "@/layout/home/Footer";
-import { useVets } from "@/hooks/vets"; 
+import { useVets } from "@/hooks/vets";
 import { useAuthStore } from "@/zustand/store/useAuthStore";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 import {
   ShieldCheck,
   MapPin,
@@ -15,28 +15,26 @@ import {
   Filter,
   Video,
   ChevronRight,
-  Loader2, 
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { VetCardProps } from "@/typescript/interface/vet";
-
-
-
-
-const SPECIALTIES = ["General", "Surgery", "Dermatology", "Nutrition", "Emergency"];
+import { SPECIALTIES } from "@/utils/vets";
 
 export default function VetsDirectoryPage() {
   const [search, setSearch] = useState("");
-  const [selectedSpecialty, setSelectedSpecialty] = useState("All"); 
-  
-  const { user } = useAuthStore(); 
+  const [selectedSpecialty, setSelectedSpecialty] = useState("All");
+
+  const { user } = useAuthStore();
   const { data: vets, isLoading, isError } = useVets(search);
 
   const filteredVets = vets?.filter((vet: any) => {
     if (selectedSpecialty === "All") return true;
-    return vet.specialty?.toLowerCase().includes(selectedSpecialty.toLowerCase());
+    return vet.specialty
+      ?.toLowerCase()
+      .includes(selectedSpecialty.toLowerCase());
   });
 
   const handleBookAppointment = (vetName: string) => {
@@ -45,7 +43,7 @@ export default function VetsDirectoryPage() {
         description: `Please login to book an appointment with Dr. ${vetName}`,
         action: {
           label: "Login",
-          onClick: () => window.location.href = "/login"
+          onClick: () => (window.location.href = "/login"),
         },
       });
     }
@@ -78,17 +76,19 @@ export default function VetsDirectoryPage() {
                 <Input
                   placeholder="Search by name..."
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)} 
+                  onChange={(e) => setSearch(e.target.value)}
                   className="pl-12 rounded-2xl bg-white border-none h-12 shadow-md focus-visible:ring-blue-500 font-bold"
                 />
               </div>
             </div>
 
             <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-              <Button 
+              <Button
                 onClick={() => setSelectedSpecialty("All")}
                 className={`rounded-xl px-8 font-bold h-11 transition-all ${
-                  selectedSpecialty === "All" ? "bg-blue-600 text-white" : "bg-white text-slate-400 border-slate-200"
+                  selectedSpecialty === "All"
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-slate-400 border-slate-200"
                 }`}
                 variant={selectedSpecialty === "All" ? "default" : "outline"}
               >
@@ -100,15 +100,18 @@ export default function VetsDirectoryPage() {
                   onClick={() => setSelectedSpecialty(spec)}
                   variant={selectedSpecialty === spec ? "default" : "outline"}
                   className={`rounded-xl border-slate-200 px-8 font-bold h-11 transition-all ${
-                    selectedSpecialty === spec 
-                    ? "bg-blue-600 text-white" 
-                    : "bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600"
+                    selectedSpecialty === spec
+                      ? "bg-blue-600 text-white"
+                      : "bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600"
                   }`}
                 >
                   {spec}
                 </Button>
               ))}
-              <Button variant="ghost" className="rounded-xl px-4 text-slate-300 hover:text-blue-600">
+              <Button
+                variant="ghost"
+                className="rounded-xl px-4 text-slate-300 hover:text-blue-600"
+              >
                 <Filter className="h-5 w-5" />
               </Button>
             </div>
@@ -119,7 +122,9 @@ export default function VetsDirectoryPage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
               <Loader2 className="h-10 w-10 animate-spin mb-4 text-blue-600" />
-              <p className="font-bold uppercase tracking-widest text-xs">Finding best doctors...</p>
+              <p className="font-bold uppercase tracking-widest text-xs">
+                Finding best doctors...
+              </p>
             </div>
           ) : isError ? (
             <div className="text-center py-20 text-red-500 font-bold uppercase tracking-widest">
@@ -133,13 +138,16 @@ export default function VetsDirectoryPage() {
             filteredVets?.map((vet: any) => (
               <VetCard
                 key={vet.id}
-                image={vet.profile_image_url || "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000"} 
+                image={
+                  vet.profile_image_url ||
+                  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=1000"
+                }
                 name={vet.full_name}
-                specialty={vet.specialty || "General Veterinarian"} 
+                specialty={vet.specialty || "General Veterinarian"}
                 location={vet.address || "Online Consultation"}
-                rating="5.0" 
+                rating="5.0"
                 reviews="0"
-                online={true} 
+                online={true}
                 onBook={() => handleBookAppointment(vet.full_name)}
               />
             ))
@@ -173,7 +181,16 @@ export default function VetsDirectoryPage() {
   );
 }
 
-function VetCard({ image, name, specialty, location, rating, reviews, online, onBook }: VetCardProps) {
+function VetCard({
+  image,
+  name,
+  specialty,
+  location,
+  rating,
+  reviews,
+  online,
+  onBook,
+}: VetCardProps) {
   return (
     <div className="group bg-white p-8 rounded-[3rem] border border-slate-100 flex flex-col md:flex-row gap-10 items-center shadow-sm hover:shadow-2xl transition-all duration-500">
       <div className="relative">
@@ -185,7 +202,10 @@ function VetCard({ image, name, specialty, location, rating, reviews, online, on
           />
         </div>
         {online && (
-          <div title="Online for Consultations" className="absolute -top-1 -right-1">
+          <div
+            title="Online for Consultations"
+            className="absolute -top-1 -right-1"
+          >
             <div className="bg-emerald-500 h-6 w-6 rounded-full border-4 border-white animate-pulse shadow-lg" />
           </div>
         )}
@@ -209,7 +229,8 @@ function VetCard({ image, name, specialty, location, rating, reviews, online, on
             <MapPin className="h-4 w-4 text-blue-400" /> {location}
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-400 font-black uppercase tracking-wider">
-            <Star className="h-4 w-4 text-amber-500 fill-current" /> {rating} ({reviews} Reviews)
+            <Star className="h-4 w-4 text-amber-500 fill-current" /> {rating} (
+            {reviews} Reviews)
           </div>
         </div>
 
@@ -221,13 +242,16 @@ function VetCard({ image, name, specialty, location, rating, reviews, online, on
       </div>
 
       <div className="w-full md:w-auto flex flex-col gap-3">
-        <Button 
-          onClick={onBook} 
+        <Button
+          onClick={onBook}
           className="bg-blue-600 hover:bg-slate-950 h-16 px-10 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] shadow-xl shadow-blue-100 transition-all active:scale-95"
         >
           Book Appointment
         </Button>
-        <Button variant="ghost" className="text-slate-300 font-black uppercase tracking-widest text-[9px] hover:text-blue-600 transition-colors">
+        <Button
+          variant="ghost"
+          className="text-slate-300 font-black uppercase tracking-widest text-[9px] hover:text-blue-600 transition-colors"
+        >
           Medical Archive <ChevronRight className="ml-1 h-3 w-3" />
         </Button>
       </div>

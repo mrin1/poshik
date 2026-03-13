@@ -29,21 +29,21 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/zustand/store/useAuthStore";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/utils/supabase"; 
+import { supabase } from "@/utils/supabase";
 import { SignupFormValues } from "@/typescript/types/auth.type";
 import { signupSchema } from "@/services/validations/auth.validation";
 
 export default function SignupPage() {
   const [mounted, setMounted] = useState(false);
-  const [activeRole, setActiveRole] = useState<"OWNER" | "DOCTOR" | "SHOP">("OWNER");
+  const [activeRole, setActiveRole] = useState<"OWNER" | "DOCTOR" | "SHOP">(
+    "OWNER",
+  );
 
-  const router = useRouter(); 
-  
+  const router = useRouter();
 
   const { register, error, setUser } = useAuthStore();
   const [localError, setLocalError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
-
 
   useEffect(() => {
     setMounted(true);
@@ -63,9 +63,8 @@ export default function SignupPage() {
   const onSubmit = async (values: yup.InferType<typeof signupSchema>) => {
     setLocalError(null);
     setIsPending(true);
-    
+
     try {
-    
       await register({
         email: values.email,
         password: values.password,
@@ -76,25 +75,22 @@ export default function SignupPage() {
 
       const isProfessional = values.role === "DOCTOR" || values.role === "SHOP";
 
-    
       if (isProfessional) {
-       
         window.location.href = "/kyc-onboarding";
       } else {
-       
         await supabase.auth.signOut();
         setUser(null, null);
-        const msg = encodeURIComponent("Registration successful! Please log in to access your portal.");
+        const msg = encodeURIComponent(
+          "Registration successful! Please log in to access your portal.",
+        );
         window.location.href = `/login?message=${msg}`;
       }
-      
     } catch (err: any) {
       setLocalError(err.message || "An error occurred during registration.");
       setIsPending(false);
     }
   };
 
-  
   if (!mounted) return null;
 
   return (
@@ -166,7 +162,9 @@ export default function SignupPage() {
                 render={({ field }) => (
                   <FormItem className="space-y-1.5">
                     <FormLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">
-                      {activeRole === "SHOP" ? "Entity Name" : "Legal Full Name"}
+                      {activeRole === "SHOP"
+                        ? "Entity Name"
+                        : "Legal Full Name"}
                     </FormLabel>
                     <FormControl>
                       <div className="relative group">
@@ -279,11 +277,13 @@ export default function SignupPage() {
               >
                 {isPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                    Processing...
                   </>
                 ) : (
                   <>
-                    Complete Registration <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Complete Registration{" "}
+                    <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </Button>

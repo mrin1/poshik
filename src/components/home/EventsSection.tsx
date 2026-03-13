@@ -35,28 +35,25 @@ export default function EventsSection({
               </p>
             </div>
           ) : data && data.length > 0 ? (
-           
-            data
-              .slice(0, 3)
-              .map((evt: any) => (
-                <EventCard
-                  key={evt.id}
-                  title={evt.title}
-                  category={evt.type || "Meetup"}
-                  date={
-                    evt.date
-                      ? new Date(evt.date).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })
-                      : "TBD"
-                  }
-                  time={evt.time || "TBA"}
-                  loc={evt.location || "Online"}
-                  attendees={evt.attendees || 0}
-                />
-              ))
+            data.slice(0, 3).map((evt: any) => (
+              <EventCard
+                key={evt.id}
+                title={evt.title}
+                category={evt.type || "Meetup"}
+                date={
+                  evt.date
+                    ? new Date(evt.date).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    : "TBD"
+                }
+                time={evt.time || "TBA"}
+                loc={evt.location || "Online"}
+                attendees={evt.attendees || 0}
+              />
+            ))
           ) : (
             <div className="col-span-3 py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
               <Calendar className="h-12 w-12 text-slate-200 mx-auto mb-4" />
@@ -67,7 +64,6 @@ export default function EventsSection({
           )}
         </div>
 
-  
         {!isLoading && (
           <div className="mt-16 text-center">
             <Button
@@ -84,9 +80,7 @@ export default function EventsSection({
   );
 }
 
-
 function EventCard({ title, category, date, time, loc, attendees }: any) {
-
   const getImageForType = (type: string) => {
     const images: Record<string, string> = {
       Meetup:
@@ -104,7 +98,7 @@ function EventCard({ title, category, date, time, loc, attendees }: any) {
   };
 
   const handleJoinEvent = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     toast.info("Feature Under Development", {
       description:
         "RSVP and ticketing will be available in the next update. Stay tuned!",
@@ -118,7 +112,6 @@ function EventCard({ title, category, date, time, loc, attendees }: any) {
       className="group cursor-pointer bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col h-full"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100 flex items-center justify-center">
-       
         <img
           src={getImageForType(category)}
           className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-transform duration-700 group-hover:scale-110"

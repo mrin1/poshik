@@ -17,9 +17,13 @@ export default function AuthProvider({
   const [mounted, setMounted] = useState(false);
   const isMountedRef = useRef(false);
 
-  const isProtectedRoute = ["/admin", "/owner", "/shop", "/doctor", "/kyc-onboarding"].some((route) =>
-    pathname.startsWith(route)
-  );
+  const isProtectedRoute = [
+    "/admin",
+    "/owner",
+    "/shop",
+    "/doctor",
+    "/kyc-onboarding",
+  ].some((route) => pathname.startsWith(route));
 
   const getRoleDashboard = (role: string) => {
     const routes: Record<string, string> = {
@@ -33,7 +37,11 @@ export default function AuthProvider({
   };
 
   const enforcePanelAccess = (role: string) => {
-    if (pathname.startsWith("/admin") && role !== "ADMIN" && role !== "SUPER-ADMIN") {
+    if (
+      pathname.startsWith("/admin") &&
+      role !== "ADMIN" &&
+      role !== "SUPER-ADMIN"
+    ) {
       router.replace(getRoleDashboard(role));
     } else if (pathname.startsWith("/owner") && role !== "OWNER") {
       router.replace(getRoleDashboard(role));
@@ -54,12 +62,18 @@ export default function AuthProvider({
 
       if (currentUser && currentUser.id === session.user.id) {
         if (isProtectedRoute) {
-          if (currentUser.role === "ADMIN" || currentUser.role === "SUPER-ADMIN") {
+          if (
+            currentUser.role === "ADMIN" ||
+            currentUser.role === "SUPER-ADMIN"
+          ) {
             if (pathname === "/kyc-onboarding") router.replace("/admin");
-          } else if (currentUser.kyc_status === "NOT_SUBMITTED" && pathname !== "/kyc-onboarding") {
+          } else if (
+            currentUser.kyc_status === "NOT_SUBMITTED" &&
+            pathname !== "/kyc-onboarding"
+          ) {
             router.replace("/kyc-onboarding");
           }
-          
+
           enforcePanelAccess(currentUser.role);
         }
         setLoading(false);
@@ -78,7 +92,10 @@ export default function AuthProvider({
         if (isProtectedRoute) {
           if (profile.role === "ADMIN" || profile.role === "SUPER-ADMIN") {
             if (pathname === "/kyc-onboarding") router.replace("/admin");
-          } else if (profile.kyc_status === "NOT-SUBMITTED" && pathname !== "/kyc-onboarding") {
+          } else if (
+            profile.kyc_status === "NOT-SUBMITTED" &&
+            pathname !== "/kyc-onboarding"
+          ) {
             router.replace("/kyc-onboarding");
           }
 
@@ -93,12 +110,12 @@ export default function AuthProvider({
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      
+
       if (session?.user) {
         await fetchProfile(session);
       } else {
         setLoading(false);
-        
+
         if (isProtectedRoute) {
           router.replace("/login");
         }
@@ -117,17 +134,17 @@ export default function AuthProvider({
           setLoading(false);
 
           if (isProtectedRoute && event === "SIGNED_OUT") {
-            window.location.href = "/login"; 
+            window.location.href = "/login";
           }
           return;
         }
-      }
+      },
     );
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [setUser, setLoading]); 
+  }, [setUser, setLoading]);
 
   if (!mounted) return null;
 

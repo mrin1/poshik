@@ -7,7 +7,7 @@ import { useAuthStore } from "@/zustand/store/useAuthStore";
 
 export function useInventory(shopId: string | undefined) {
   const queryClient = useQueryClient();
-  
+
   const { user } = useAuthStore();
 
   const inventoryQuery = useQuery({
@@ -17,7 +17,7 @@ export function useInventory(shopId: string | undefined) {
       const { data, error } = await supabase
         .from("products")
         .select("*")
-       // .eq("shop_id", shopId) // 
+        // .eq("shop_id", shopId) //
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -33,7 +33,7 @@ export function useInventory(shopId: string | undefined) {
       const payload = {
         ...newProduct,
         shop_id: shopId,
-        shop_name: user?.full_name || "Poshik Pet Shop", 
+        shop_name: user?.full_name || "Poshik Pet Shop",
       };
 
       const { error } = await supabase.from("products").insert([payload]);
@@ -52,15 +52,17 @@ export function useInventory(shopId: string | undefined) {
         .from("products")
         .update(updates)
         .eq("id", id)
-        .eq("shop_id", shopId) 
+        .eq("shop_id", shopId)
         .select();
 
       if (error) throw error;
-      
+
       if (!data || data.length === 0) {
-        throw new Error("Update failed. You might not have permission to edit this.");
+        throw new Error(
+          "Update failed. You might not have permission to edit this.",
+        );
       }
-      
+
       return data[0];
     },
     onSuccess: () => {
@@ -76,8 +78,8 @@ export function useInventory(shopId: string | undefined) {
         .from("products")
         .delete()
         .eq("id", productId)
-        .eq("shop_id", shopId); 
-        
+        .eq("shop_id", shopId);
+
       if (error) throw error;
     },
     onSuccess: () => {

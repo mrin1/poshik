@@ -32,14 +32,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useUIStore } from "@/zustand/store/useUIStore";
 
 export default function Navbar() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   
-
   const { user, logout } = useAuthStore(); 
   const { cartCount, isLoaded } = useCart(); 
+   const { openSidebar } = useUIStore();
 
   useEffect(() => {
     setMounted(true);
@@ -64,13 +65,12 @@ export default function Navbar() {
       
   
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden h-12 w-12 rounded-2xl hover:bg-orange-50 transition-all"
+         <button 
+          onClick={openSidebar} 
+          className="lg:hidden p-2 hover:bg-slate-50 rounded-xl text-slate-900 transition-colors"
         >
-          <Menu className="h-6 w-6 text-slate-900" />
-        </Button>
+          <Menu className="h-6 w-6" />
+        </button>
 
         <div 
           onClick={() => router.push("/")}
@@ -189,7 +189,7 @@ export default function Navbar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-slate-50 mx-2" />
-            <div className="p-2 space-y-1">
+            {/* <div className="p-2 space-y-1">
               <DropdownMenuItem onClick={() => router.push("/profile")} className="rounded-xl font-bold text-xs uppercase tracking-widest py-3 focus:bg-orange-50 focus:text-orange-600 cursor-pointer">
                 <User size={14} className="mr-2" /> Personal Profile
               </DropdownMenuItem>
@@ -199,7 +199,7 @@ export default function Navbar() {
               <DropdownMenuItem onClick={() => router.push("/settings")} className="rounded-xl font-bold text-xs uppercase tracking-widest py-3 focus:bg-orange-50 focus:text-orange-600 cursor-pointer">
                 <Settings size={14} className="mr-2" /> Platform Settings
               </DropdownMenuItem>
-            </div>
+            </div> */}
             <DropdownMenuSeparator className="bg-slate-50 mx-2" />
             <DropdownMenuItem 
               onClick={handleSignOut}

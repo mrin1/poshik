@@ -9,14 +9,14 @@ export function useAppointments(userId: string | undefined) {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-   
     queryKey: ["all-appointments", userId],
     queryFn: async (): Promise<Appointment[]> => {
       if (!userId) return [];
-      
+
       const { data, error } = await supabase
         .from("appointments")
-        .select(`
+        .select(
+          `
           id,
           appointment_date,
           time_slot,
@@ -26,8 +26,9 @@ export function useAppointments(userId: string | undefined) {
           pet_id,
           pets!inner ( name, breed ),
           owner:register!owner_id ( full_name )
-        `)
-       
+        `,
+        )
+
         .order("appointment_date", { ascending: false });
 
       if (error) throw error;
@@ -52,14 +53,16 @@ export function useAppointments(userId: string | undefined) {
     if (!userId) return;
 
     const channel = supabase
-      .channel('global_appointments_channel')
+      .channel("global_appointments_channel")
       .on(
         "postgres_changes",
-        
+
         { event: "*", schema: "public", table: "appointments" },
         () => {
-          queryClient.invalidateQueries({ queryKey: ["all-appointments", userId] });
-        }
+          queryClient.invalidateQueries({
+            queryKey: ["all-appointments", userId],
+          });
+        },
       )
       .subscribe();
 
@@ -69,7 +72,13 @@ export function useAppointments(userId: string | undefined) {
   }, [userId, queryClient]);
 
   const updateStatus = useMutation({
-    mutationFn: async ({ id, newStatus }: { id: string; newStatus: string }) => {
+    mutationFn: async ({
+      id,
+      newStatus,
+    }: {
+      id: string;
+      newStatus: string;
+    }) => {
       const { error } = await supabase
         .from("appointments")
         .update({ status: newStatus })
@@ -78,7 +87,7 @@ export function useAppointments(userId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["all-appointments", userId] });
-     
+
       queryClient.invalidateQueries({ queryKey: ["doctor-dashboard", userId] });
     },
   });

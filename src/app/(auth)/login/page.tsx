@@ -35,58 +35,47 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
-  // Extract universal auth state
   const { login, user, setUser } = useAuthStore();
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  // --- HYDRATION GUARD & URL PARAM EXTRACTION ---
   useEffect(() => {
     setMounted(true);
-    // Safely extract URL parameters entirely on the client side
-    // This prevents Next.js hydration mismatches and avoids needing <Suspense>
+
     const params = new URLSearchParams(window.location.search);
     const message = params.get("message");
     if (message) setSuccessMsg(message);
   }, []);
 
-  //--- RECTIFIED UNIVERSAL LOGIN REDIRECT ---
   useEffect(() => {
     if (mounted && user) {
-      // 1. HIGH PRIORITY: Administrative Bypass
       if (user.role === "ADMIN" || user.role === "SUPER-ADMIN") {
         router.push("/admin");
         return;
       }
 
-      //2. ROLE BYPASS: Pet Owners (Bypass KYC)
       if (user.role === "OWNER") {
         router.push("/owner");
         return;
       }
 
-      // 3. PROFESSIONAL FUNNEL: Doctors & Shops
-      if (user.role === "DOCTOR" || user.role === "SHOP" || user.role==="OWNER") {
-
-        // A. If documents are missing, force onboarding
+      if (
+        user.role === "DOCTOR" ||
+        user.role === "SHOP" ||
+        user.role === "OWNER"
+      ) {
         if (user.kyc_status === "NOT_SUBMITTED") {
           router.push("/kyc-onboarding");
-        }
+        } else if (user.kyc_status === "PENDING") {
+          setLocalError(
+            "Your professional documents are currently under review by the Kolkata Node.",
+          );
 
-        // B. If submitted but pending admin review
-        else if (user.kyc_status === "PENDING") {
-          setLocalError("Your professional documents are currently under review by the Kolkata Node.");
-
-          // SECURITY FIX: Terminate the "ghost session" immediately so they
-          // don't remain logged in while locked out of the dashboard.
           supabase.auth.signOut().then(() => {
             setUser(null, null);
           });
-        }
-
-        // C. If approved, route to professional dashboards
-        else if (user.kyc_status === "APPROVED") {
+        } else if (user.kyc_status === "APPROVED") {
           const targetRoute = user.role === "DOCTOR" ? "/doctor" : "/shop";
           router.push(targetRoute);
         }
@@ -94,7 +83,6 @@ export default function LoginPage() {
     }
   }, [user, router, mounted, setUser]);
 
-  // useEffect(() => {
   //   if (mounted && user) {
   //     // 1. HIGH PRIORITY: Administrative Bypass [cite: 18, 103]
   //     if (user.role === "ADMIN" || user.role === "SUPER-ADMIN") {
@@ -149,7 +137,7 @@ export default function LoginPage() {
 
   const onSubmit = async (values: yup.InferType<typeof loginSchema>) => {
     setLocalError(null);
-    setSuccessMsg(null); // Clear success message on new attempt
+    setSuccessMsg(null);
     setIsPending(true);
     try {
       await login({ email: values.email, password: values.password });
@@ -159,7 +147,6 @@ export default function LoginPage() {
     }
   };
 
-  // Prevent flicker during client hydration
   if (!mounted) return null;
 
   return (
@@ -168,7 +155,6 @@ export default function LoginPage() {
       <div className="absolute bottom-[-10%] right-[-5%] h-[60%] w-[50%] bg-emerald-900/10 blur-[140px] rounded-full" />
 
       <main className="relative z-10 w-full max-w-[480px] bg-[#020617] border border-white/5 rounded-[2.5rem] shadow-2xl p-8 md:p-10 transition-all duration-500 overflow-hidden">
-        {/* SUCCESS NOTIFICATION BAR */}
         {successMsg && !localError && (
           <div className="mb-8 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
             <CheckCircle2 className="h-5 w-5 text-emerald-500" />
@@ -198,7 +184,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Global Error Alerts */}
         {localError && (
           <div className="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-700">
             <p className="text-[11px] font-bold text-red-500 text-center w-full leading-tight">

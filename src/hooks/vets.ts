@@ -8,7 +8,7 @@ export function useVets(searchTerm: string = "") {
       let query = supabase
         .from("register")
         .select("*")
-       // .eq("role", "DOCTOR") 
+        // .eq("role", "DOCTOR")
         .order("created_at", { ascending: false });
 
       if (searchTerm) {
@@ -17,7 +17,7 @@ export function useVets(searchTerm: string = "") {
 
       const { data, error } = await query;
       console.log("ALL USERS:", data);
-      
+
       if (error) throw error;
       return data || [];
     },

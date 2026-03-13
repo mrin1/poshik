@@ -26,8 +26,6 @@ import {
 import { supabase } from "@/utils/supabase";
 import { PlatformStats, RecentUser } from "@/typescript/interface/admin";
 
-
-
 export default function AdminDashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

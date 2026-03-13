@@ -3,7 +3,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 
-
 export interface Conversation {
   id: string;
   ownerName: string;
@@ -38,13 +37,13 @@ export function useMessages(conversationId: string | undefined) {
         .from("messages")
         .select("*")
         .eq("conversation_id", conversationId)
-        .order("created_at", { ascending: true }); 
+        .order("created_at", { ascending: true });
 
       if (error) throw error;
       return data || [];
     },
     enabled: !!conversationId,
-    refetchInterval: 3000, 
+    refetchInterval: 3000,
   });
 }
 
@@ -52,10 +51,20 @@ export function useSendMessage() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ conversationId, senderId, text }: { conversationId: string, senderId: string, text: string }) => {
+    mutationFn: async ({
+      conversationId,
+      senderId,
+      text,
+    }: {
+      conversationId: string;
+      senderId: string;
+      text: string;
+    }) => {
       const { data, error } = await supabase
         .from("messages")
-        .insert([{ conversation_id: conversationId, sender_id: senderId, text }])
+        .insert([
+          { conversation_id: conversationId, sender_id: senderId, text },
+        ])
         .select()
         .single();
 
@@ -63,12 +72,14 @@ export function useSendMessage() {
       return data;
     },
     onSuccess: (newMessage) => {
-    
-      queryClient.setQueryData(["messages", newMessage.conversation_id], (oldMessages: any) => {
-        return [...(oldMessages || []), newMessage];
-      });
-      
+      queryClient.setQueryData(
+        ["messages", newMessage.conversation_id],
+        (oldMessages: any) => {
+          return [...(oldMessages || []), newMessage];
+        },
+      );
+
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
-    }
+    },
   });
 }

@@ -21,9 +21,6 @@ import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
 import { PublicEvent } from "@/typescript/interface/event";
 
-
-
-
 export default function EventsPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [events, setEvents] = useState<PublicEvent[]>([]);
@@ -290,7 +287,6 @@ function EventCard({
 
         <div className="pt-4 flex items-center justify-between border-t border-slate-50">
           <div className="flex -space-x-2">
-           
             {attendees > 0 &&
               [1, 2, 3]
                 .slice(0, Math.min(3, attendees))

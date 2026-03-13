@@ -11,33 +11,30 @@ export function useDoctorDashboard(userId: string | undefined) {
       if (!userId) return null;
 
       const d = new Date();
-      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
       const [
         { data: schedule, error: schedError },
         { count: pendingCount },
-        { count: totalPetsCount } 
+        { count: totalPetsCount },
       ] = await Promise.all([
-    
         supabase
           .from("appointments")
-          .select(`
+          .select(
+            `
             id, appointment_date, time_slot, status, is_online, notes,
             pets ( name, breed ), owner:register!owner_id ( full_name )
-          `)
+          `,
+          )
           .eq("appointment_date", today)
           .order("time_slot", { ascending: true }),
 
-      
         supabase
           .from("appointments")
           .select("*", { count: "exact", head: true })
           .eq("status", "PENDING"),
 
-
-        supabase
-          .from("pets")
-          .select("*", { count: "exact", head: true })
+        supabase.from("pets").select("*", { count: "exact", head: true }),
       ]);
 
       if (schedError) {
@@ -49,8 +46,10 @@ export function useDoctorDashboard(userId: string | undefined) {
         schedule: (schedule || []).map((apt: any) => ({
           id: apt.id,
           time: apt.time_slot,
-  
-          petName: apt.pets ? `${apt.pets.name} (${apt.pets.breed})` : "Unknown Pet",
+
+          petName: apt.pets
+            ? `${apt.pets.name} (${apt.pets.breed})`
+            : "Unknown Pet",
           ownerName: apt.owner?.full_name || "Unknown Owner",
           type: apt.notes || "General Consult",
           isOnline: apt.is_online,
@@ -59,7 +58,7 @@ export function useDoctorDashboard(userId: string | undefined) {
         stats: {
           appointmentsToday: schedule?.length || 0,
           pendingRequests: pendingCount || 0,
-          totalPatients: totalPetsCount || 0, 
+          totalPatients: totalPetsCount || 0,
         },
       };
     },

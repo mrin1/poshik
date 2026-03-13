@@ -27,7 +27,7 @@ export function usePetOwnerBooking(ownerId: string | undefined) {
         .eq("kyc_status", "APPROVED");
 
       if (error) throw error;
-      
+
       return data.map((doc) => ({
         ...doc,
         specialty: "General Practice",
@@ -53,22 +53,23 @@ export function usePetOwnerBooking(ownerId: string | undefined) {
     enabled: !!ownerId,
   });
 
-
   const createAppointment = useMutation({
-    mutationFn: async (vars: { 
-      doctor_id: string; 
-      pet_id: string; 
-      date: string; 
-      time: string 
+    mutationFn: async (vars: {
+      doctor_id: string;
+      pet_id: string;
+      date: string;
+      time: string;
     }) => {
-      const { error } = await supabase.from("appointments").insert([{
-        owner_id: ownerId,
-        doctor_id: vars.doctor_id,
-        pet_id: vars.pet_id,
-        appointment_date: vars.date,
-        time_slot: vars.time,
-        status: "PENDING"
-      }]);
+      const { error } = await supabase.from("appointments").insert([
+        {
+          owner_id: ownerId,
+          doctor_id: vars.doctor_id,
+          pet_id: vars.pet_id,
+          appointment_date: vars.date,
+          time_slot: vars.time,
+          status: "PENDING",
+        },
+      ]);
       if (error) throw error;
     },
     onSuccess: () => {

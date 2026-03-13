@@ -4,17 +4,18 @@ import { useState, useEffect } from "react";
 import { ShoppingBag, ArrowRight, ChevronLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useCartData } from "@/hooks/useCartData";
-import { useCheckout } from "@/hooks/useCheckout"; 
+import { useCheckout } from "@/hooks/useCheckout";
 import { CartItem } from "@/components/shop/CartItem";
-import { PaymentModal } from "@/components/shop/PaymentModal"; 
+import { PaymentModal } from "@/components/shop/PaymentModal";
 import { Button } from "@/components/ui/button";
 
 export default function CartPage() {
   const [mounted, setMounted] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false); 
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
-  const { cartItems, isLoading, updateLocalQuantity, removeLocalItem } = useCartData();
-  const { processCheckout, isProcessing } = useCheckout(); 
+  const { cartItems, isLoading, updateLocalQuantity, removeLocalItem } =
+    useCartData();
+  const { processCheckout, isProcessing } = useCheckout();
 
   useEffect(() => setMounted(true), []);
 
@@ -32,7 +33,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#f8fafc] p-4 md:p-8 font-sans">
       <div className="max-w-6xl mx-auto space-y-8">
-      
         <header className="flex flex-col gap-2">
           <Link
             href="/shop"
@@ -64,7 +64,6 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
                 <CartItem
@@ -76,7 +75,6 @@ export default function CartPage() {
               ))}
             </div>
 
-      
             <div className="bg-slate-950 rounded-[3rem] p-10 text-white shadow-2xl sticky top-8 transition-all">
               <h2 className="text-2xl font-[900] uppercase tracking-tighter mb-8 italic">
                 Summary
@@ -104,8 +102,7 @@ export default function CartPage() {
                 </span>
               </div>
 
-        
-              <Button 
+              <Button
                 onClick={() => setIsPaymentOpen(true)}
                 className="w-full h-16 rounded-2xl bg-white text-slate-950 hover:bg-emerald-500 hover:text-white font-black uppercase tracking-widest text-[11px] transition-all group active:scale-95"
               >
@@ -121,9 +118,9 @@ export default function CartPage() {
         )}
       </div>
 
-      <PaymentModal 
-        isOpen={isPaymentOpen} 
-        onClose={() => setIsPaymentOpen(false)} 
+      <PaymentModal
+        isOpen={isPaymentOpen}
+        onClose={() => setIsPaymentOpen(false)}
         onConfirm={handlePaymentConfirm}
         total={subtotal}
         isProcessing={isProcessing}
